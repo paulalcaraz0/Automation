@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh workflow:*)",
+      "Bash(gh run list:*)",
+      "Bash(bash \"C:\\Github Automation\\scripts\\update-activity.sh\")",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
