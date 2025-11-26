@@ -2,7 +2,9 @@ name: Keep GitHub Activity Green
 
 on:
   schedule:
-    - cron: '0 3 * * *'  # 03:00 UTC daily (11:00 UTC+08)
+    - cron: '0 2 * * *'   # 02:00 UTC daily (10:00 AM PHT)
+    - cron: '0 8 * * *'   # 08:00 UTC daily (04:00 PM PHT)
+    - cron: '0 15 * * *'  # 15:00 UTC daily (11:00 PM PHT)
   workflow_dispatch:
 
 permissions:
@@ -15,7 +17,20 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Decide whether to run
+        id: should_run
+        run: |
+          # 50% chance to proceed, 50% chance to skip
+          if [ $((RANDOM % 2)) -eq 0 ]; then
+            echo "decision=run" >> $GITHUB_OUTPUT
+            echo "This run will proceed"
+          else
+            echo "decision=skip" >> $GITHUB_OUTPUT
+            echo "Skipping this run for randomization"
+          fi
+
       - name: Randomize run time
+        if: steps.should_run.outputs.decision == 'run'
         env:
           JITTER_MAX_SECONDS: 1800
         run: |
@@ -24,16 +39,28 @@ jobs:
           sleep "$JITTER"
 
       - name: Make activity update
+        if: steps.should_run.outputs.decision == 'run'
         run: |
           bash scripts/update-activity.sh
 
       - name: Commit and push if changed
+        if: steps.should_run.outputs.decision == 'run'
         run: |
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "${GITHUB_ACTOR}@users.noreply.github.com"
           if [ -n "$(git status --porcelain)" ]; then
+            # Array of varied commit messages
+            MESSAGES=(
+              "chore: update activity logs"
+              "chore: automated maintenance"
+              "chore: daily sync"
+              "chore: activity tracking update"
+              "chore: keep repository active"
+            )
+            # Randomly select a message
+            RANDOM_MSG="${MESSAGES[$RANDOM % ${#MESSAGES[@]}]}"
             git add -A
-            git commit -m "chore: keep activity green $(date -u +'%Y-%m-%d')"
+            git commit -m "$RANDOM_MSG"
             git push
           else
             echo "No changes to commit"
