@@ -4,6 +4,7 @@ This repository automates a small daily commit to keep your GitHub contribution 
 
 ## How it works
 - A GitHub Actions workflow runs daily on a schedule.
+- hihi
 - It appends a UTC timestamp to `logs/activity.log`.
 - If there are changes, it commits and pushes them back to the repository using the built-in `GITHUB_TOKEN`.
 
