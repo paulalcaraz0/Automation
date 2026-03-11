@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # GitHub Activity Automation
 
 This repository automates a small daily commit to keep your GitHub contribution graph green.
@@ -33,3 +34,6 @@ git push -u origin main
 ## Notes
 - The workflow uses `permissions: contents: write` and relies on the default `GITHUB_TOKEN` provided by GitHub Actions.
 - If you fork or make this private, ensure Actions are enabled.
+=======
+# Automation
+>>>>>>> 383b825dbdd14aab46122197810cd0b1a7fbb5dd
